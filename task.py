@@ -31,7 +31,7 @@ class Task():
         reward = 1.-.3*(abs(self.sim.pose[:3] - self.target_pos)).sum()
 
         if reward > 1:
-            reward = 10
+            reward = 1
         elif reward < -1:
             reward = -1
 
