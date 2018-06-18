@@ -1,6 +1,6 @@
 import random
 from collections import namedtuple, deque
-from keras import layers, models, optimizers
+from keras import layers, models, optimizers, regularizers
 from keras import backend as K
 import numpy as np
 import copy
@@ -61,10 +61,6 @@ class Actor:
         states = layers.Input(shape=(self.state_size,), name='states')
 
         # Add hidden layers
-        net = layers.Dense(units=32, activation='relu')(states)
-        net = layers.Dense(units=64, activation='relu')(net)
-        net = layers.Dense(units=32, activation='relu')(net)
-
         net = layers.Dense(units = 32, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(states)
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
@@ -79,11 +75,26 @@ class Actor:
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
+        
+        net = layers.Dense(units = 256, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.BatchNormalization()(net)
+        net = layers.Activation('relu')(net)
+        net = layers.Dropout(0.5)(net)
+        
+        net = layers.Dense(units = 128, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.BatchNormalization()(net)
+        net = layers.Activation('relu')(net)
+        net = layers.Dropout(0.5)(net)
 
         net = layers.Dense(units = 64, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
-net = layers.Dropout(0.5)(net)
+        net = layers.Dropout(0.5)(net)
+        
+        net = layers.Dense(units = 32, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.BatchNormalization()(net)
+        net = layers.Activation('relu')(net)
+        net = layers.Dropout(0.5)(net)
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
 
@@ -142,16 +153,17 @@ class Critic:
         net_states = layers.Activation('relu')(net_states)
         net_states = layers.Dropout(0.5)(net_states)
 
-        net_states = layers.Dense(units=64, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(states)
+        net_states = layers.Dense(units=64, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net_states)
         net_states = layers.BatchNormalization()(net_states)
         net_states = layers.Activation('relu')(net_states)
         net_states = layers.Dropout(0.5)(net_states)
 
-        net_states = layers.Dense(units=128, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(states)
+        net_states = layers.Dense(units=128, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net_states)
         net_states = layers.BatchNormalization()(net_states)
         net_states = layers.Activation('relu')(net_states)
         net_states = layers.Dropout(0.5)(net_states)
 
+        
         # Add hidden layer(s) for action pathway
         net_actions = layers.Dense(units=32, use_bias = False, kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(actions)
         net_actions = layers.BatchNormalization()(net_actions)
@@ -166,7 +178,7 @@ class Critic:
         net_actions = layers.Dense(units=128, use_bias = False, kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(net_actions)
         net_actions = layers.BatchNormalization()(net_actions)
         net_actions = layers.Activation('relu')(net_actions)
-net_actions = layers.Dropout(0.5)(net_actions)
+        net_actions = layers.Dropout(0.5)(net_actions)
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
 
@@ -230,8 +242,15 @@ class DDPG():
         self.gamma = 0.99  # discount factor
         self.tau = 0.01  # for soft update of target parameters
 
+        self.best_score = -np.inf
+        self.total_reward = 0.0
+        self.count = 0
+        self.score = 0
+
     def reset_episode(self):
         self.noise.reset()
+        self.total_reward = 0.0
+        self.count = 0
         state = self.task.reset()
         self.last_state = state
         return state
@@ -239,6 +258,10 @@ class DDPG():
     def step(self, action, reward, next_state, done):
          # Save experience / reward
         self.memory.add(self.last_state, action, reward, next_state, done)
+        
+        # Save experience / reward
+        self.total_reward += reward
+        self.count += 1
 
         # Learn, if enough samples are available in memory
         if len(self.memory) > self.batch_size:
@@ -278,7 +301,11 @@ class DDPG():
 
         # Soft-update target models
         self.soft_update(self.critic_local.model, self.critic_target.model)
-        self.soft_update(self.actor_local.model, self.actor_target.model)   
+        self.soft_update(self.actor_local.model, self.actor_target.model) 
+        
+        self.score = self.total_reward / float(self.count) if self.count else 0.0
+        if self.score > self.best_score:
+            self.best_score = self.score
 
     def soft_update(self, local_model, target_model):
         """Soft update model parameters."""
