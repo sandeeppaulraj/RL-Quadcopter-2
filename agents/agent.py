@@ -71,17 +71,17 @@ class Actor:
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
 
-        net = layers.Dense(units = 128, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
-        net = layers.BatchNormalization()(net)
-        net = layers.Activation('relu')(net)
-        net = layers.Dropout(0.5)(net)
-        
-        net = layers.Dense(units = 256, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.Dense(units = 96, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
         
         net = layers.Dense(units = 128, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.BatchNormalization()(net)
+        net = layers.Activation('relu')(net)
+        net = layers.Dropout(0.5)(net)
+        
+        net = layers.Dense(units = 96, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
@@ -158,7 +158,7 @@ class Critic:
         net_states = layers.Activation('relu')(net_states)
         net_states = layers.Dropout(0.5)(net_states)
 
-        net_states = layers.Dense(units=128, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net_states)
+        net_states = layers.Dense(units=96, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net_states)
         net_states = layers.BatchNormalization()(net_states)
         net_states = layers.Activation('relu')(net_states)
         net_states = layers.Dropout(0.5)(net_states)
@@ -175,7 +175,7 @@ class Critic:
         net_actions = layers.Activation('relu')(net_actions)
         net_actions = layers.Dropout(0.5)(net_actions)
 
-        net_actions = layers.Dense(units=128, use_bias = False, kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(net_actions)
+        net_actions = layers.Dense(units=96, use_bias = False, kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(net_actions)
         net_actions = layers.BatchNormalization()(net_actions)
         net_actions = layers.Activation('relu')(net_actions)
         net_actions = layers.Dropout(0.5)(net_actions)
