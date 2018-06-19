@@ -66,25 +66,25 @@ class Actor:
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
 
-        net = layers.Dense(units = 64, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
-        net = layers.BatchNormalization()(net)
-        net = layers.Activation('relu')(net)
-        net = layers.Dropout(0.5)(net)
+        #net = layers.Dense(units = 64, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        #net = layers.BatchNormalization()(net)
+        #net = layers.Activation('relu')(net)
+        #net = layers.Dropout(0.5)(net)
 
-        net = layers.Dense(units = 96, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
-        net = layers.BatchNormalization()(net)
-        net = layers.Activation('relu')(net)
-        net = layers.Dropout(0.5)(net)
+        #net = layers.Dense(units = 96, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        #net = layers.BatchNormalization()(net)
+        #net = layers.Activation('relu')(net)
+        #net = layers.Dropout(0.5)(net)
         
-        net = layers.Dense(units = 128, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
-        net = layers.BatchNormalization()(net)
-        net = layers.Activation('relu')(net)
-        net = layers.Dropout(0.5)(net)
+        #net = layers.Dense(units = 128, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        #net = layers.BatchNormalization()(net)
+        #net = layers.Activation('relu')(net)
+        #net = layers.Dropout(0.5)(net)
         
-        net = layers.Dense(units = 96, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
-        net = layers.BatchNormalization()(net)
-        net = layers.Activation('relu')(net)
-        net = layers.Dropout(0.5)(net)
+        #net = layers.Dense(units = 96, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        #net = layers.BatchNormalization()(net)
+        #net = layers.Activation('relu')(net)
+        #net = layers.Dropout(0.5)(net)
 
         net = layers.Dense(units = 64, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
         net = layers.BatchNormalization()(net)
@@ -158,14 +158,14 @@ class Critic:
         net_states = layers.Activation('relu')(net_states)
         net_states = layers.Dropout(0.5)(net_states)
 
-        net_states = layers.Dense(units=96, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net_states)
-        net_states = layers.BatchNormalization()(net_states)
-        net_states = layers.Activation('relu')(net_states)
-        net_states = layers.Dropout(0.5)(net_states)
+        #net_states = layers.Dense(units=96, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net_states)
+        #net_states = layers.BatchNormalization()(net_states)
+        #net_states = layers.Activation('relu')(net_states)
+        #net_states = layers.Dropout(0.5)(net_states)
 
         
         # Add hidden layer(s) for action pathway
-        net_actions = layers.Dense(units=32, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None),kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(actions)
+        net_actions = layers.Dense(units=32, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(actions)
         net_actions = layers.BatchNormalization()(net_actions)
         net_actions = layers.Activation('relu')(net_actions)
         net_actions = layers.Dropout(0.5)(net_actions)
@@ -175,10 +175,10 @@ class Critic:
         net_actions = layers.Activation('relu')(net_actions)
         net_actions = layers.Dropout(0.5)(net_actions)
 
-        net_actions = layers.Dense(units=96, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None),  kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(net_actions)
-        net_actions = layers.BatchNormalization()(net_actions)
-        net_actions = layers.Activation('relu')(net_actions)
-        net_actions = layers.Dropout(0.5)(net_actions)
+        #net_actions = layers.Dense(units=96, use_bias = False,  kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(net_actions)
+        #net_actions = layers.BatchNormalization()(net_actions)
+        #net_actions = layers.Activation('relu')(net_actions)
+        #net_actions = layers.Dropout(0.5)(net_actions)
         
         # kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None),
 
@@ -242,7 +242,7 @@ class DDPG():
 
         # Algorithm parameters
         self.gamma = 0.99  # discount factor
-        self.tau = 0.01  # for soft update of target parameters
+        self.tau = 0.001  # for soft update of target parameters
 
         self.best_score = -np.inf
         self.total_reward = 0.0
