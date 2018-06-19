@@ -1,6 +1,6 @@
 import random
 from collections import namedtuple, deque
-from keras import layers, models, optimizers, regularizers
+from keras import layers, models, optimizers, regularizers, initializers
 from keras import backend as K
 import numpy as np
 import copy
@@ -61,37 +61,37 @@ class Actor:
         states = layers.Input(shape=(self.state_size,), name='states')
 
         # Add hidden layers
-        net = layers.Dense(units = 32, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(states)
+        net = layers.Dense(units = 32, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(states) 
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
 
-        net = layers.Dense(units = 64, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.Dense(units = 64, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
 
-        net = layers.Dense(units = 96, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.Dense(units = 96, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
         
-        net = layers.Dense(units = 128, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.Dense(units = 128, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
         
-        net = layers.Dense(units = 96, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.Dense(units = 96, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
 
-        net = layers.Dense(units = 64, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.Dense(units = 64, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
         
-        net = layers.Dense(units = 32, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
+        net = layers.Dense(units = 32, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net)
         net = layers.BatchNormalization()(net)
         net = layers.Activation('relu')(net)
         net = layers.Dropout(0.5)(net)
@@ -116,7 +116,7 @@ class Actor:
         # Incorporate any additional losses here (e.g. from regularizers)
 
         # Define optimizer and training function
-        optimizer = optimizers.Adam(lr=0.001)
+        optimizer = optimizers.Adam(lr=0.0001)
         updates_op = optimizer.get_updates(params=self.model.trainable_weights, loss=loss)
         self.train_fn = K.function(
             inputs=[self.model.input, action_gradients, K.learning_phase()],
@@ -148,37 +148,39 @@ class Critic:
         actions = layers.Input(shape=(self.action_size,), name='actions')
 
         # Add hidden layer(s) for state pathway
-        net_states = layers.Dense(units=32, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(states)
+        net_states = layers.Dense(units=32, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(states)
         net_states = layers.BatchNormalization()(net_states)
         net_states = layers.Activation('relu')(net_states)
         net_states = layers.Dropout(0.5)(net_states)
 
-        net_states = layers.Dense(units=64, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net_states)
+        net_states = layers.Dense(units=64, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net_states)
         net_states = layers.BatchNormalization()(net_states)
         net_states = layers.Activation('relu')(net_states)
         net_states = layers.Dropout(0.5)(net_states)
 
-        net_states = layers.Dense(units=96, use_bias = False, kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net_states)
+        net_states = layers.Dense(units=96, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer = regularizers.l2(0.01), activity_regularizer = regularizers.l1(0.01))(net_states)
         net_states = layers.BatchNormalization()(net_states)
         net_states = layers.Activation('relu')(net_states)
         net_states = layers.Dropout(0.5)(net_states)
 
         
         # Add hidden layer(s) for action pathway
-        net_actions = layers.Dense(units=32, use_bias = False, kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(actions)
+        net_actions = layers.Dense(units=32, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None),kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(actions)
         net_actions = layers.BatchNormalization()(net_actions)
         net_actions = layers.Activation('relu')(net_actions)
         net_actions = layers.Dropout(0.5)(net_actions)
 
-        net_actions = layers.Dense(units=64, use_bias = False, kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(net_actions)
+        net_actions = layers.Dense(units=64, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None), kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(net_actions)
         net_actions = layers.BatchNormalization()(net_actions)
         net_actions = layers.Activation('relu')(net_actions)
         net_actions = layers.Dropout(0.5)(net_actions)
 
-        net_actions = layers.Dense(units=96, use_bias = False, kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(net_actions)
+        net_actions = layers.Dense(units=96, use_bias = False, kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None),  kernel_regularizer=regularizers.l2(0.01), activity_regularizer=regularizers.l1(0.01))(net_actions)
         net_actions = layers.BatchNormalization()(net_actions)
         net_actions = layers.Activation('relu')(net_actions)
         net_actions = layers.Dropout(0.5)(net_actions)
+        
+        # kernel_initializer=initializers.RandomUniform(minval=-0.0001, maxval=0.0001, seed=None),
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
 
